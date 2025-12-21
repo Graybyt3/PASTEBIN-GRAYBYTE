@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<!--
+Graybyt3 - Ex-Blackhat  | Ex Super Mod of Team_CC.
+Now securing systems as a Senior Security Expert .
+I hack servers for fun, patch them to torture you.
+
+"My life is a lie, and i'm living in this only truth.- Graybyt3"
+
+WARNING: This code is for educational and ethical purposes only.
+I am not responsible for any misuse or illegal activities.
+
+WARNING: Steal my code, and I'll call you Pappu — there's no worse shame in this world than being called Pappu.
+#FuCk_Pappu
+-->
+<head>
+    <meta charset="utf-8">
+    <title>PASTE BY GRAYBYTE</title>
+    <link rel="icon" type="image/png" href="https://graybyte.host/imgx/logoxcode.png">
+    <link href="https://fonts.googleapis.com/css2?family=Play:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Play', sans-serif;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #000 url('https://graybyte.host/imgx/background.png') center/cover fixed;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            padding: 2px 2px 2px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            flex-wrap: wrap;
+            #background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+        }
+
+        .top-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: 2px solid #ff0000;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+            transition: all .3s;
+        }
+
+        .top-btn:hover {
+            background: rgba(255, 0, 0, 0.2);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .textarea-container {
+            flex: 1;
+            margin: 0 0px 10px;
+            #background: rgba(20, 0, 0, 0.4);
+            border-radius: 9px;
+            padding: 20px;
+            border: 4px solid #ff0000;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+        }
+
+        textarea {
+            flex: 1;
+            width: 100%;
+            padding: 20px;
+            background: transparent;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            outline: none;
+            resize: none;
+            font-family: 'Play', sans-serif;
+        }
+
+        .footer {
+            text-align: center;
+            #padding: 15px 0;
+            color: #800000;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-bar">
+        <button class="top-btn" id="newTabBtn">NEW-TAB</button>
+        <button class="top-btn" id="copyBtn">COPY</button>
+        <button class="top-btn" id="pasteBtn">PASTE</button>
+        <button class="top-btn" id="duplicateBtn">DUPLICATE</button>
+        <button class="top-btn" id="reloadBtn">RELOAD</button>
+        <button class="top-btn" id="saveBtn">SAVE</button>
+    </div>
+
+    <div class="textarea-container">
+        <textarea id="mainTextarea" placeholder="Paste or type anything here..."></textarea>
+    </div>
+
+    <div class="footer">
+        GRAYBYTE X-CODES PRIVATE TOOL © 2025 | FUCK PAPPU
+    </div>
+
+    <script>
+        const textarea = document.getElementById('mainTextarea');
+
+        document.getElementById('newTabBtn').onclick = () => window.open(window.location.href.split('?')[0], '_blank');
+
+        document.getElementById('copyBtn').onclick = async () => {
+            try {
+                await navigator.clipboard.writeText(textarea.value);
+            } catch (err) {
+                textarea.select();
+                document.execCommand('copy');
+            }
+        };
+
+        document.getElementById('pasteBtn').onclick = () => {
+            textarea.focus();
+        };
+
+        document.getElementById('duplicateBtn').onclick = () => {
+            const cleanUrl = window.location.href.split('?')[0];
+            const url = new URL(cleanUrl);
+            url.searchParams.set('content', btoa(unescape(encodeURIComponent(textarea.value))));
+            window.open(url.toString(), '_blank');
+        };
+
+        document.getElementById('reloadBtn').onclick = () => location.reload();
+
+        document.getElementById('saveBtn').onclick = () => {
+            const saveTab = window.open('https://paste.laravel.io/', '_blank');
+        };
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('content')) {
+            const encoded = params.get('content');
+            try {
+                textarea.value = decodeURIComponent(escape(atob(encoded)));
+            } catch (e) { }
+        }
+    </script>
+</body>
+
+</html>
