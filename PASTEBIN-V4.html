@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>PASTE BY GRAYBYTE</title>
+    <link rel="icon" type="image/png" href="https://graybyte.host/imgx/logoxcode.png">
+    <link href="https://fonts.googleapis.com/css2?family=Play:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Play', sans-serif;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #000 url('https://graybyte.host/imgx/background.png') center/cover fixed;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 0px 0px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 5px;
+            flex-wrap: wrap;
+            z-index: 100;
+        }
+        .top-btn {
+            padding: 9px 9px;
+            background: transparent;
+            border: 2px solid #ff0000;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            min-width: 100px;
+            transition: all .3s;
+        }
+        .top-btn:hover {
+            background: #0095ff49;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+            transform: translateY(-2px);
+        }
+        .textarea-container {
+            flex: 1;
+            margin: 45px 6px 0px;
+            border-radius: 9px;
+            padding: 0px;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .editor-wrapper {
+            flex: 1;
+            background: transparent;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+        }
+        .line-numbers {
+            padding: 25px 10px;
+            background: #0093ff2b;
+            color: #ffffffff;
+            text-align: right;
+            user-select: none;
+            font-size: 17px;
+            line-height: 1.5;
+            white-space: pre;
+            overflow: hidden;
+        }
+        textarea {
+            flex: 1;
+            padding: 20px;
+            background: transparent;
+            color: #ffffff;
+            border: none;
+            font-size: 16px;
+            outline: none;
+            resize: none;
+            line-height: 1.5;
+        }
+        .stats {
+            position: fixed;
+            right: 5px;
+            bottom: 7px;
+            border: 2px solid #ffffff;
+            background: transparent;
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-size: 20px;
+            /* box-shadow: 0 0 15px rgba(255, 0, 0, 1); */
+            color: #ffffff;
+            /* text-shadow: 0 0 8px #ff0000; */
+        }
+        @keyframes glow {
+            0% { text-shadow: 0 0 6px #ff0000, 0 0 12px #ff0000; }
+            100% { text-shadow: 0 0 12px #ff1a1a, 0 0 20px #ff0000; }
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #0dff00ff;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: transparent;
+            padding: 0px 0;
+            z-index: 100;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            display: none;
+            z-index: 999;
+        }
+        .find-replace-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000000;
+            border: 4px solid #ff0000;
+            border-radius: 7px;
+            padding: 25px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            width: 60%;
+        }
+        .find-replace-modal input {
+            padding: 12px;
+            background: #000000;
+            border: 2px solid #ff0000;
+            color: #fff;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            background: #0093ff2b;
+            border: 2px solid #ff0000;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .modal-btn:hover {
+            background: rgba(255, 0, 0, 0.3);
+        }
+        .search-info {
+            background: #000000;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .custom-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000000e3;
+            border: 3px solid #ff0000;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.9);
+            z-index: 1100;
+            text-align: center;
+            color: #fff;
+            font-size: 17px;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            width: 60%;
+        }
+        .custom-alert button {
+            padding: 13px 50px;
+            background: transparent;
+            border: 2px solid #ff0000;
+            color: #fff;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .custom-alert button:hover {
+            background: rgba(255, 0, 0, 0.3);
+        }
+        .highlight {
+            background: #ff0000;
+            color: #fff;
+        }
+        .current-highlight {
+            background: #22ff00ff;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <button class="top-btn" id="newTabBtn">NEW-TAB</button>
+        <button class="top-btn" id="copyBtn">COPY</button>
+        <button class="top-btn" id="pasteBtn">PASTE</button>
+        <button class="top-btn" id="duplicateBtn">DUPLICATE</button>
+        <button class="top-btn" id="reloadBtn">RELOAD</button>
+        <button class="top-btn" id="saveBtn">SAVE</button>
+        <button class="top-btn" id="clearBtn">CLEAR</button>
+        <button class="top-btn" id="findBtn">FIND</button>
+        <button class="top-btn" id="topBtn">TOP</button>
+        <button class="top-btn" id="bottomBtn">BOTTOM</button>
+    </div>
+    <div class="textarea-container">
+        <div class="editor-wrapper" id="editorWrapper">
+            <div class="line-numbers" id="lineNumbers">1</div>
+            <textarea id="mainTextarea" placeholder="Paste or type anything here..."></textarea>
+        </div>
+        <div class="stats" id="statsDisplay">Lines: 1 | Words: 0 | Chars: 0 | Sel Lines: 0</div>
+    </div>
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="find-replace-modal" id="findReplaceModal">
+        <input type="text" id="findInput" placeholder="Find...">
+        <input type="text" id="replaceInput" placeholder="Replace with... (optional)">
+        <div class="search-info" id="searchInfo">No search performed</div>
+        <div class="modal-buttons">
+            <button class="modal-btn" id="findNextBtn">NEXT</button>
+            <button class="modal-btn" id="findPrevBtn">PREV</button>
+            <button class="modal-btn" id="replaceAllBtn">REPLACE ALL</button>
+            <button class="modal-btn" id="closeModalBtn">CLOSE</button>
+        </div>
+    </div>
+    <div class="custom-alert" id="customAlert">
+        <div id="alertMessage"></div>
+        <div>
+            <button id="alertOk">OK</button>
+            <button id="alertCancel" style="display:none;">CANCEL</button>
+        </div>
+    </div>
+    <div class="footer">☣ GRAYBYTE X-CODES PRIVATE TOOL © 2025 | FUCK PAPPU ☣</div>
+
+    <script>
+        const textarea = document.getElementById('mainTextarea');
+        const lineNumbers = document.getElementById('lineNumbers');
+        const statsDisplay = document.getElementById('statsDisplay');
+        const editorWrapper = document.getElementById('editorWrapper');
+        const modal = document.getElementById('findReplaceModal');
+        const overlay = document.getElementById('modalOverlay');
+        const findInput = document.getElementById('findInput');
+        const replaceInput = document.getElementById('replaceInput');
+        const searchInfo = document.getElementById('searchInfo');
+        const customAlert = document.getElementById('customAlert');
+        const alertMessage = document.getElementById('alertMessage');
+        const alertOk = document.getElementById('alertOk');
+        const alertCancel = document.getElementById('alertCancel');
+
+        let alertResolve = null;
+
+        function showCustomAlert(message, showCancel = false) {
+            return new Promise((resolve) => {
+                alertMessage.textContent = message;
+                alertOk.style.display = 'inline-block';
+                alertCancel.style.display = showCancel ? 'inline-block' : 'none';
+                customAlert.style.display = 'flex';
+                alertResolve = resolve;
+                alertOk.onclick = () => {
+                    customAlert.style.display = 'none';
+                    resolve(true);
+                };
+                if (showCancel) {
+                    alertCancel.onclick = () => {
+                        customAlert.style.display = 'none';
+                        resolve(false);
+                    };
+                }
+            });
+        }
+
+        // Show warning on first load
+        if (!sessionStorage.getItem('graybyte_warning_shown')) {
+            showCustomAlert("GRAYBYTE PRIVATE PASTE TOOL\n\nAuthorized use only.\nAll activity is logged.\nDo not paste sensitive data.\nUse at your own risk.\n\nFUCK PAPPU");
+            sessionStorage.setItem('graybyte_warning_shown', 'true');
+        }
+
+        let matches = [];
+        let currentMatchIndex = -1;
+
+        function updateStats() {
+            const text = textarea.value.replace(/<mark[^>]*>|<\/mark>/g, ''); // clean for accurate count
+            const linesCount = text === '' ? 1 : text.split('\n').length;
+            const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            const chars = text.length;
+
+            // Selected lines count
+            let selLines = 0;
+            if (textarea.selectionStart !== textarea.selectionEnd) {
+                const startLine = text.substring(0, textarea.selectionStart).split('\n').length;
+                const endLine = text.substring(0, textarea.selectionEnd).split('\n').length;
+                selLines = endLine - startLine + 1;
+            }
+
+            let numbers = '';
+            for (let i = 1; i <= linesCount; i++) {
+                numbers += i + '\n';
+            }
+            lineNumbers.textContent = numbers.slice(0, -1);
+
+            statsDisplay.textContent = `Lines: ${linesCount} | Words: ${words} | Chars: ${chars} | Sel Lines: ${selLines}`;
+
+            lineNumbers.scrollTop = textarea.scrollTop;
+        }
+
+        function clearHighlights() {
+            const cleanText = textarea.value.replace(/<mark[^>]*>|<\/mark>/g, '');
+            textarea.value = cleanText;
+            updateStats();
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function performSearch() {
+            const term = findInput.value.trim();
+            if (!term) {
+                matches = [];
+                currentMatchIndex = -1;
+                searchInfo.textContent = 'Enter a search term';
+                clearHighlights();
+                return;
+            }
+
+            clearHighlights();
+
+            const escaped = escapeRegExp(term);
+            const regex = new RegExp(`(${escaped})`, 'gi');
+            const text = textarea.value;
+            matches = [];
+            let match;
+            while ((match = regex.exec(text)) !== null) {
+                matches.push({
+                    start: match.index,
+                    end: match.index + match[1].length,
+                    text: match[1],
+                    line: text.substring(0, match.index).split('\n').length
+                });
+            }
+
+            highlightMatches();
+            updateSearchInfo();
+        }
+
+        function highlightMatches() {
+            if (matches.length === 0) return;
+            let offset = 0;
+            let newValue = textarea.value.replace(/<mark[^>]*>|<\/mark>/g, '');
+            matches.forEach((m, i) => {
+                const start = m.start + offset;
+                const end = m.end + offset;
+                const className = i === currentMatchIndex ? 'current-highlight' : 'highlight';
+                newValue = newValue.substring(0, start) +
+                    `<mark class="${className}">${newValue.substring(start, end)}</mark>` +
+                    newValue.substring(end);
+                offset += `<mark class="${className}">`.length + `</mark>`.length;
+            });
+            textarea.value = newValue;
+            updateStats();
+        }
+
+        function updateSearchInfo() {
+            if (matches.length === 0) {
+                searchInfo.textContent = 'No matches found';
+            } else {
+                const index = currentMatchIndex + 1 || 0;
+                const line = currentMatchIndex >= 0 ? matches[currentMatchIndex].line : '-';
+                searchInfo.textContent = `Found ${matches.length} match${matches.length > 1 ? 'es' : ''} | Current: ${index}/${matches.length} (Line ${line})`;
+            }
+        }
+
+        function goToMatch(index) {
+            if (matches.length === 0 || index < 0 || index >= matches.length) return;
+            currentMatchIndex = index;
+            highlightMatches();
+            updateSearchInfo();
+            textarea.focus();
+
+            const lineStart = textarea.value.split('\n').slice(0, matches[index].line - 1).join('\n').length + (matches[index].line > 1 ? 1 : 0);
+            textarea.selectionStart = matches[index].start;
+            textarea.selectionEnd = matches[index].end;
+
+            const scrollPos = (matches[index].line - 1) / (textarea.value.split('\n').length || 1) * textarea.scrollHeight;
+            textarea.scrollTop = scrollPos - (textarea.clientHeight / 2);
+        }
+
+        // Events
+        textarea.addEventListener('input', () => {
+            updateStats();
+            if (modal.style.display === 'flex') performSearch();
+        });
+        textarea.addEventListener('scroll', () => lineNumbers.scrollTop = textarea.scrollTop);
+        textarea.addEventListener('mouseup', updateStats);
+        textarea.addEventListener('keyup', updateStats);
+        textarea.addEventListener('select', updateStats);
+
+        textarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                textarea.value = textarea.value.substring(0, start) + '\t' + textarea.value.substring(end);
+                textarea.selectionStart = textarea.selectionEnd = start + 1;
+                updateStats();
+            }
+        });
+
+        // Buttons
+        document.getElementById('newTabBtn').onclick = () => window.open(window.location.href.split('?')[0], '_blank');
+
+        document.getElementById('copyBtn').onclick = async () => {
+            const clean = textarea.value.replace(/<mark[^>]*>|<\/mark>/g, '');
+            try { await navigator.clipboard.writeText(clean); } catch {}
+        };
+
+        document.getElementById('pasteBtn').onclick = async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                textarea.value += text;
+                updateStats();
+            } catch {}
+        };
+
+        document.getElementById('duplicateBtn').onclick = () => {
+            const cleanText = textarea.value.replace(/<mark[^>]*>|<\/mark>/g, '');
+            const url = new URL(window.location.href.split('?')[0]);
+            url.searchParams.set('content', btoa(unescape(encodeURIComponent(cleanText))));
+            window.open(url.toString(), '_blank');
+        };
+
+        document.getElementById('reloadBtn').onclick = async () => {
+            if (textarea.value.trim() !== '') {
+                const confirmed = await showCustomAlert('You have unsaved content. Reload anyway?', true);
+                if (!confirmed) return;
+            }
+            location.reload();
+        };
+
+        document.getElementById('saveBtn').onclick = () => window.open('https://paste.laravel.io/', '_blank');
+
+        document.getElementById('clearBtn').onclick = async () => {
+            const confirmed = await showCustomAlert('Clear all content?', true);
+            if (confirmed) {
+                textarea.value = '';
+                updateStats();
+                clearHighlights();
+            }
+        };
+
+        function smoothScrollTo(element, targetTop) {
+            const start = element.scrollTop;
+            const distance = targetTop - start;
+            const duration = 600;
+            let startTime = null;
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+                const progress = Math.min(timeElapsed / duration, 1);
+                const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                element.scrollTop = start + distance * ease;
+                if (timeElapsed < duration) requestAnimationFrame(animation);
+            }
+            requestAnimationFrame(animation);
+        }
+
+        document.getElementById('topBtn').onclick = () => {
+            smoothScrollTo(textarea, 0);
+            smoothScrollTo(lineNumbers, 0);
+        };
+
+        document.getElementById('bottomBtn').onclick = () => {
+            smoothScrollTo(textarea, textarea.scrollHeight);
+            smoothScrollTo(lineNumbers, lineNumbers.scrollHeight);
+        };
+
+        // Find modal
+        function openModal() {
+            overlay.style.display = 'block';
+            modal.style.display = 'flex';
+            findInput.focus();
+            performSearch();
+        }
+
+        document.getElementById('findBtn').onclick = openModal;
+
+        document.getElementById('closeModalBtn').onclick = () => {
+            overlay.style.display = 'none';
+            modal.style.display = 'none';
+            clearHighlights();
+            matches = [];
+            currentMatchIndex = -1;
+            updateStats();
+        };
+
+        overlay.onclick = () => {
+            overlay.style.display = 'none';
+            modal.style.display = 'none';
+            clearHighlights();
+            matches = [];
+            currentMatchIndex = -1;
+            updateStats();
+        };
+
+        findInput.addEventListener('input', performSearch);
+
+        document.getElementById('findNextBtn').onclick = () => {
+            if (matches.length === 0) return;
+            currentMatchIndex = (currentMatchIndex + 1) % matches.length;
+            goToMatch(currentMatchIndex);
+        };
+
+        document.getElementById('findPrevBtn').onclick = () => {
+            if (matches.length === 0) return;
+            currentMatchIndex = currentMatchIndex <= 0 ? matches.length - 1 : currentMatchIndex - 1;
+            goToMatch(currentMatchIndex);
+        };
+
+        document.getElementById('replaceAllBtn').onclick = () => {
+            const term = findInput.value.trim();
+            const replaceWith = replaceInput.value;
+            if (!term || matches.length === 0) return;
+
+            const cleanText = textarea.value.replace(/<mark[^>]*>|<\/mark>/g, '');
+            const escaped = escapeRegExp(term);
+            const regex = new RegExp(escaped, 'gi');
+            textarea.value = cleanText.replace(regex, replaceWith);
+
+            updateStats();
+            matches = [];
+            currentMatchIndex = -1;
+            searchInfo.textContent = 'Replaced all occurrences';
+        };
+
+        // Load from URL
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('content')) {
+            try {
+                textarea.value = decodeURIComponent(escape(atob(params.get('content'))));
+                updateStats();
+            } catch (e) {}
+        }
+
+        // Initial update
+        updateStats();
+    </script>
+</body>
+</html>
