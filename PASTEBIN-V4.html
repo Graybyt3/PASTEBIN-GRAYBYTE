@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>PASTE BY GRAYBYTE</title>
-    <link rel="icon" type="image/png" href="https://graybyte.host/imgx/logoxcode.png">
+    <link rel="icon" type="image/png" href="https://i.ibb.co.com/v4mCm9J7/logoxcode.png">
     <link href="https://fonts.googleapis.com/css2?family=Play:wght@700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -22,7 +22,7 @@
         }
 
         body {
-            background: #000 url('https://graybyte.host/imgx/background.png') center/cover fixed;
+            background: #000 url('https://i.ibb.co.com/7xNJDcqX/background.jpg') center/cover fixed;
             color: #fff;
             display: flex;
             flex-direction: column;
@@ -446,7 +446,6 @@
             textarea.scrollTop = scrollPos - (textarea.clientHeight / 2);
         }
 
-        // Events
         textarea.addEventListener('input', () => {
             updateStats();
             if (modal.style.display === 'flex') performSearch();
@@ -467,7 +466,6 @@
             }
         });
 
-        // Buttons
         document.getElementById('newTabBtn').onclick = () => window.open(window.location.href.split('?')[0], '_blank');
 
         document.getElementById('copyBtn').onclick = async () => {
@@ -535,7 +533,6 @@
             smoothScrollTo(lineNumbers, lineNumbers.scrollHeight);
         };
 
-        // Find modal
         function openModal() {
             overlay.style.display = 'block';
             modal.style.display = 'flex';
@@ -593,7 +590,6 @@
             searchInfo.textContent = 'Replaced all occurrences';
         };
 
-        // Load from URL
         const params = new URLSearchParams(window.location.search);
         if (params.has('content')) {
             try {
@@ -602,7 +598,6 @@
             } catch (e) { }
         }
 
-        // Initial update
         updateStats();
     </script>
 </body>
